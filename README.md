@@ -1,8 +1,8 @@
-# Komfovent C6 (C6M) Home Assistant Package
+# Komfovent C6 & C6M Home Assistant Package
 
 **Draft under construction**
 
-Set of files for configuring MODBUS connection to a Komfovent Unit
+A file for configuring MODBUS connection to a Komfovent Unit
 
 This uses the Home Assistant 'Package' system.
 
