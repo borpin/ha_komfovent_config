@@ -1,0 +1,441 @@
+modbus:
+
+  name: "Komfovent"
+  type: tcp
+  host: 192.168.x.x
+  port: 502
+
+  switches:
+    - name: "Komfovent Switch Power"
+      # slave: 1
+      address: 0
+      command_on: 1
+      command_off: 0  
+      verify:
+    - name: "Komfovent Switch Eco"
+      # slave: 1
+      address: 2
+      command_on: 1
+      command_off: 0
+      verify:
+    - name: "Komfovent Switch Auto"
+      address: 3
+      command_on: 1
+      command_off: 0
+      verify:
+    # Logic
+    # Away,Intensive or Boost off, switch to Normal
+    # Switch Normal Off go to Away
+    - name: "Komfovent Switch Away"
+      # slave: 2
+      address: 4
+      command_on: 1
+      command_off: 2
+      verify:
+    - name: "Komfovent Switch Normal"
+      # slave: 2
+      address: 4
+      command_on: 2
+      command_off: 1
+      verify:
+    - name: "Komfovent Switch Intensive"
+      # slave: 2
+      address: 4
+      command_on: 3
+      command_off: 2
+      verify:
+    - name: "Komfovent Switch Boost"
+      # slave: 2
+      address: 4
+      command_on: 4
+      command_off: 2
+      verify:
+
+  sensors:
+    - name: "Komfovent on off num"
+      address: 0
+      input_type: holding
+      data_type: uint16
+      # unique_id: kom_s_power
+    - name: "Komfovent Eco num"
+      address: 2
+      input_type: holding
+      data_type: uint16
+      # unique_id: kom_s_eco
+    - name: "Komfovent Auto num"
+      address: 3
+      input_type: holding
+      data_type: uint16
+      # unique_id: kom_s_auto
+    - name: "Komfovent Mode num"
+      address: 4
+      input_type: holding
+      data_type: uint16
+      # unique_id: kom_s_mode
+    - name: "Komfovent Scheduler num"
+      address: 5
+      input_type: holding
+      data_type: uint16
+      # unique_id: kom_s_sched
+    - name: "Komfovent Supply temperature 'C"
+      address: 901
+      input_type: holding
+      data_type: int16
+      unit_of_measurement: °C
+      scale: 0.1
+      precision: 1
+      device_class: temperature
+      state_class: measurement
+      scan_interval: 10
+      # unique_id: kom_m_sup_temp
+    - name: "Komfovent Extract temperature 'C"
+      address: 902
+      input_type: holding
+      data_type: int16
+      scale: 0.1
+      unit_of_measurement: °C
+      precision: 1
+      device_class: temperature
+      state_class: measurement
+      scan_interval: 10
+      # unique_id: kom_m_extract_temp
+    - name: "Komfovent Outdoor temperature 'C"
+      address: 903
+      input_type: holding
+      data_type: int16
+      scale: 0.1
+      unit_of_measurement: °C
+      precision: 1
+      device_class: temperature
+      state_class: measurement
+      scan_interval: 10
+    - name: "Komfovent Supply Flow volume"
+      address: 905
+      count: 2            
+      data_type: uint32
+      input_type: holding
+      precision: 1
+      unit_of_measurement: m3
+      scan_interval: 10
+    - name: "Komfovent Extract Flow volume"
+      address: 907
+      count: 2          
+      data_type: uint32
+      input_type: holding
+      precision: 1
+      unit_of_measurement: m3
+      scan_interval: 10
+    - name: "Komfovent Supply Fan Intensivity '%"
+      address: 909
+      data_type: uint16
+      input_type: holding
+      scale: 0.1
+      precision: 1
+      unit_of_measurement: percent
+      state_class: measurement
+      scan_interval: 30
+    - name: "Komfovent Extract Fan Intensivity '%"
+      address: 910
+      data_type: uint16
+      input_type: holding
+      scale: 0.1
+      precision: 1
+      unit_of_measurement: percent
+      state_class: measurement
+      scan_interval: 30
+    - name: "Komfovent Electric Heater %"
+      address: 912
+      data_type: uint16
+      input_type: holding
+      scale: 0.1
+      precision: 1
+      unit_of_measurement: percent
+      state_class: measurement
+      scan_interval: 10
+    - name: "Komfovent Filter Impurity, %"
+      address: 916
+      data_type: uint16
+      input_type: holding        
+      unit_of_measurement: percent
+      state_class: measurement
+      scan_interval: 60
+    # - name: "Komfovent Supply Pressure"
+    #   address: 918
+    #   data_type: uint16
+    #   input_type: holding
+    #   unit_of_measurement: Pa
+    #   state_class: measurement
+    #   scan_interval: 10
+    - name: "Komfovent Status"
+      address: 900
+      data_type: uint16
+      input_type: holding
+      scan_interval: 10
+    - name: "Komfovent Power consumption, W"
+      address: 920
+      data_type: uint16
+      input_type: holding
+      unit_of_measurement: W
+      device_class: power
+      state_class: measurement
+      scan_interval: 10
+    - name: "Komfovent Heater Power, W"
+      address: 921
+      data_type: uint16
+      input_type: holding 
+      unit_of_measurement: W
+      device_class: power
+      state_class: measurement
+      scan_interval: 30
+    - name: "Komfovent Heat Recovery, W"
+      address: 922
+      data_type: uint16
+      input_type: holding 
+      unit_of_measurement: W
+      device_class: power
+      state_class: measurement
+      scan_interval: 10
+    - name: "Komfovent Heat exchanger efficiency, %"
+      address: 923
+      data_type: uint16
+      input_type: holding
+      unit_of_measurement: percent
+      state_class: measurement
+      scan_interval: 10
+    - name: "Komfovent Energy saving, %"
+      address: 924
+      data_type: uint16
+      input_type: holding
+      unit_of_measurement: percent
+      state_class: measurement
+      scan_interval: 10
+    - name: "Komfovent Specific power (SPI)"
+      address: 925
+      data_type: uint16
+      input_type: holding 
+      scale: 0.001
+      precision: 2
+      unit_of_measurement: W/(m3/h)
+      state_class: measurement
+      scan_interval: 10
+#Consumption
+    - name: "Komfovent AHU Consumption Day, kWh"
+      address: 926
+      data_type: uint32
+      input_type: holding
+      count: 2
+      precision: 2
+      scale: 0.001        
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      scan_interval: 30
+    - name: "Komfovent AHU Consumption Month, kWh"
+      address: 928
+      data_type: uint32
+      input_type: holding
+      count: 2
+      precision: 2
+      scale: 0.001        
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      scan_interval: 30
+    - name: "Komfovent AHU Consumption Total, kWh"
+      address: 930
+      data_type: uint32
+      input_type: holding
+      count: 2
+      precision: 2
+      scale: 0.001        
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      scan_interval: 30
+    - name: "Komfovent Heater Consumpion Day, kWh"
+      address: 932
+      data_type: uint32
+      input_type: holding
+      count: 2
+      precision: 2
+      scale: 0.001        
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      scan_interval: 30
+    - name: "Komfovent Heater Consumpion Month, kWh"
+      address: 934
+      data_type: uint32
+      input_type: holding
+      count: 2
+      precision: 2
+      scale: 0.001        
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      scan_interval: 30
+    - name: "Komfovent Heater Consumpion Total, kWh"
+      address: 936
+      data_type: uint32
+      input_type: holding
+      count: 2
+      precision: 2
+      scale: 0.001        
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      scan_interval: 30
+    - name: "Komfovent Heating Recovery Day, kWh"
+      address: 938
+      data_type: uint32
+      input_type: holding
+      count: 2
+      precision: 2
+      scale: 0.001        
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      scan_interval: 30
+    - name: "Komfovent Heating Recovery Month, kWh"
+      address: 940
+      data_type: uint32
+      input_type: holding
+      count: 2
+      precision: 2
+      scale: 0.001        
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      scan_interval: 30
+    - name: "Komfovent Heating Recovery Total, kWh"
+      address: 942
+      data_type: uint32
+      input_type: holding
+      count: 2
+      precision: 2
+      scale: 0.001        
+      unit_of_measurement: kWh
+      device_class: energy
+      state_class: total_increasing
+      scan_interval: 30
+
+sensor:
+  platform: template
+  sensors:
+    komfovent_on_off:
+      friendly_name: "Komfovent On Off"
+      unit_of_measurement: "State"
+      value_template: >-
+        {% set mapper =  {
+            '0' : 'Off',
+            '1' : 'On'} %}
+        {% set state =  states.sensor.komfovent_on_off_num.state %}
+        {{ mapper[state] if state in mapper else 'Unknown' }}
+
+    komfovent_eco_mode:
+      friendly_name: "Komfovent Eco Mode"
+      unit_of_measurement: "State"
+      value_template: >-
+        {% set mapper =  {
+            '0' : 'Off',
+            '1' : 'On'} %}
+        {% set state =  states.sensor.komfovent_eco_num.state %}
+        {{ mapper[state] if state in mapper else 'Unknown' }}
+
+    komfovent_auto_mode:
+      friendly_name: "Komfovent Auto Mode"
+      unit_of_measurement: "State"
+      value_template: >-
+        {% set mapper =  {
+            '0' : 'Off',
+            '1' : 'On'} %}
+        {% set state =  states.sensor.komfovent_auto_num.state %}
+        {{ mapper[state] if state in mapper else 'Unknown' }}
+
+    komfovent_operation_mode:
+      friendly_name: "Komfovent Operation Mode"
+      unit_of_measurement: "State"
+      value_template: >-
+        {% set mapper =  {
+            '0' : 'Standby',
+            '1' : 'Away',
+            '2' : 'Normal',
+            '3' : 'Intensive',
+            '4' : 'Boost',
+            '5' : 'Kitchen',
+            '6' : 'Fireplace',
+            '7' : 'Overide',
+            '8' : 'Holiday',
+            '9' : 'Air Quality',
+            '10' : 'Off' } %}
+        {% set state =  states.sensor.komfovent_mode_num.state %}
+        {{ mapper[state] if state in mapper else 'Unknown' }}
+
+    komfovent_scheduler_mode:
+      friendly_name: "Komfovent Scheduler Mode"
+      unit_of_measurement: "State"
+      value_template: >-
+        {% set mapper =  {
+            '0' : 'StayAtHome',
+            '1' : 'WorkingWeek',
+            '2' : 'Office',
+            '3' : 'Custom'} %}
+        {% set state =  states.sensor.komfovent_scheduler_num.state %}
+        {{ mapper[state] if state in mapper else 'Unknown' }}
+
+shell_command:
+  komfovent_kitchen_mode: >-
+    curl 'http://192.168.7.231/' --data-raw '1=user&2=user' &&
+    curl 'http://192.168.7.231/ajax.xml' --data-raw '282=20'
+
+  komfovent_fireplace_mode: >-
+    curl 'http://192.168.7.231/' --data-raw '1=user&2=user' &&
+    curl 'http://192.168.7.231/ajax.xml' --data-raw '283=20'
+
+  komfovent_overide_mode: >-
+    curl 'http://192.168.7.231/' --data-raw '1=user&2=user' &&
+    curl 'http://192.168.7.231/ajax.xml' --data-raw '284=20'
+
+binary_sensor:
+  - platform: template
+    sensors:
+      komfovent_status_starting:
+        friendly_name: "Komfovent Status - Starting"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(1) > 0 }}"
+      komfovent_status_stopping:
+        friendly_name: "Komfovent Status - Stopping"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(2) > 0 }}"
+      komfovent_status_fan:
+        friendly_name: "Komfovent Status - Fan"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(4) > 0 }}"
+      komfovent_status_rotor:
+        friendly_name: "Komfovent Status - Rotor"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(8) > 0 }}"
+      komfovent_status_heating:
+        friendly_name: "Komfovent Status - Heating"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(16) > 0 }}"
+      komfovent_status_cooling:
+        friendly_name: "Komfovent Status - Cooling"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(32) > 0 }}"
+      komfovent_status_heatingdenied:
+        friendly_name: "Komfovent Status - Heating Denied"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(64) > 0 }}"
+      komfovent_status_coolingdenied:
+        friendly_name: "Komfovent Status - Cooling Denied"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(128) > 0 }}"
+      komfovent_status_flow_down:
+        friendly_name: "Komfovent Status - Flow Down"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(256) > 0 }}"
+      komfovent_status_free_heating:
+        friendly_name: "Komfovent Status - Free Heating"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(512) > 0 }}"
+      komfovent_status_free_cooling:
+        friendly_name: "Komfovent Status - Free Cooling"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(1024) > 0 }}"
+      komfovent_status_alarm_f:
+        friendly_name: "Komfovent Status - Alarm F"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(2048) > 0 }}"
+      komfovent_status_alarm_w:
+        friendly_name: "Komfovent Status - Alarm W"
+        value_template: "{{ states('sensor.Komfovent_status')|int|bitwise_and(4096) > 0 }}"
+
