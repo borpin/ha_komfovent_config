@@ -50,6 +50,12 @@ modbus:
       command_on: 4
       command_off: 2
       verify:
+    - name: "Komfovent Switch Normal Heater"
+      # slave: 1
+      address: 110
+      command_on: 1
+      command_off: 0  
+      verify:
 
   sensors:
     - name: "Komfovent on off num"
@@ -201,7 +207,7 @@ modbus:
     #   state_class: measurement
     #   scan_interval: 10
     - name: "Komfovent Status"
-      address: 900
+      address: 899
       data_type: uint16
       input_type: holding
       scan_interval: 10
@@ -628,8 +634,31 @@ automation:
     trigger:
       - platform: state
         entity_id: sensor.komfovent_heater_consumption_day_kwh
-        to: '0'
+        to: '0.0'
+      - platform: state
+        entity_id: sensor.komfovent_heater_consumption_day_kwh
+        to: '0.01'
+      - platform: state
+        entity_id: sensor.komfovent_heater_consumption_day_kwh
+        to: '0.02'
+    action:
+      - service: notify.persistent_notification
+        data:
+          message: Heater consumption yesterday {{trigger.from_state.state}}kWh
+      - service: mqtt.publish
+        data:
+          topic: ha/kom_heater_yesterday
+          retain: true
+          payload: '{{trigger.from_state.state}}'
+
+  - alias: Komfovent Exercise Fans
+    description: 'Write Normal Fan Setpoint (Sup & Extract) when input_number changes'
+    trigger:
+      - platform: state
+        entity_id: input_number.komfovent_set_fan
     condition: []
     action:
-      - service: number.set_value
-        data: {}
+      - service: script.komfovent_write_fan_intensity_normal
+        data:
+          komfovent_fan_intensity: ["0","{{states.input_number.komfovent_set_fan.state}}"]
+    mode: single
