@@ -50,6 +50,7 @@ modbus:
       command_on: 4
       command_off: 2
       verify:
+      
     - name: "Komfovent Switch Normal Heater"
       # slave: 1
       address: 110
@@ -210,7 +211,7 @@ modbus:
       address: 899
       data_type: uint16
       input_type: holding
-      scan_interval: 10
+      scan_interval: 5
     - name: "Komfovent Power consumption, W"
       address: 920
       data_type: uint16
@@ -606,7 +607,7 @@ automation:
       - platform: homeassistant
         event: start
       - platform: state
-        entity_id: sensor.komfovent_status_normal_setpoint_c
+        entity_id: sensor.komfovent_status_normal_fan_extract_setpoint
     condition: []
     action:
       - service: input_number.set_value
@@ -651,14 +652,14 @@ automation:
           retain: true
           payload: '{{trigger.from_state.state}}'
 
-  - alias: Komfovent Exercise Fans
-    description: 'Write Normal Fan Setpoint (Sup & Extract) when input_number changes'
-    trigger:
-      - platform: state
-        entity_id: input_number.komfovent_set_fan
-    condition: []
-    action:
-      - service: script.komfovent_write_fan_intensity_normal
-        data:
-          komfovent_fan_intensity: ["0","{{states.input_number.komfovent_set_fan.state}}"]
-    mode: single
+  # - alias: Komfovent Exercise Fans
+  #   description: 'Write Normal Fan Setpoint (Sup & Extract) when input_number changes'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: input_number.komfovent_set_fan
+  #   condition: []
+  #   action:
+  #     - service: script.komfovent_write_fan_intensity_normal
+  #       data:
+  #         komfovent_fan_intensity: ["0","{{states.input_number.komfovent_set_fan.state}}"]
+  #   mode: single
