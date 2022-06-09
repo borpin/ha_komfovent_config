@@ -1,0 +1,193 @@
+type: vertical-stack
+cards:
+  - type: horizontal-stack
+    cards:
+      - type: custom:button-card
+        entity: sensor.komfovent_operation_mode
+        color: grey
+        tap_action:
+          action: call-service
+          service: modbus.write_register
+          service_data:
+            address: 4
+            hub: Komfovent
+            unit: 1
+            value: 1
+        hold_action:
+          action: none
+        name: Away
+        show_name: true
+        icon: mdi:home-export-outline
+        color_type: card
+        state:
+          - value: Away
+            color: CornflowerBlue
+      - type: custom:button-card
+        entity: sensor.komfovent_operation_mode
+        color: grey
+        tap_action:
+          action: call-service
+          service: modbus.write_register
+          service_data:
+            address: 4
+            hub: Komfovent
+            unit: 1
+            value: 2
+        hold_action:
+          action: none
+        name: Normal
+        show_name: true
+        icon: mdi:home-account
+        color_type: card
+        state:
+          - value: Normal
+            color: CornflowerBlue
+      - type: custom:button-card
+        entity: sensor.komfovent_operation_mode
+        color: grey
+        tap_action:
+          action: call-service
+          service: modbus.write_register
+          service_data:
+            address: 4
+            hub: Komfovent
+            unit: 1
+            value: 3
+        hold_action:
+          action: none
+        name: Intensive
+        show_name: true
+        icon: mdi:weather-windy
+        color_type: card
+        state:
+          - value: Intensive
+            color: CornflowerBlue
+      - type: custom:button-card
+        entity: sensor.komfovent_operation_mode
+        color: grey
+        tap_action:
+          action: call-service
+          service: modbus.write_register
+          service_data:
+            address: 4
+            hub: Komfovent
+            unit: 1
+            value: 4
+        hold_action:
+          action: none
+        name: Boost
+        show_name: true
+        icon: mdi:fan
+        color_type: card
+        state:
+          - value: Boost
+            color: CornflowerBlue
+  - type: horizontal-stack
+    cards:
+      - type: custom:button-card
+        entity: sensor.komfovent_operation_mode
+        color: grey
+        tap_action:
+          action: call-service
+          service: shell_command.komfovent_kitchen_mode
+          service_data: {}
+          target: {}
+        hold_action:
+          action: none
+        name: Kitchen
+        show_name: true
+        icon: mdi:atom-variant
+        color_type: card
+        state:
+          - value: Kitchen
+            color: CornflowerBlue
+      - type: custom:button-card
+        entity: switch.komfovent_switch_eco
+        color: grey
+        name: Eco
+        icon: mdi:snowflake-variant
+        hold_action: more-info
+        color_type: card
+        state:
+          - value: 'on'
+            color: CornflowerBlue
+          - value: 'off'
+            color: grey
+      - type: custom:button-card
+        entity: switch.komfovent_switch_auto
+        color: grey
+        hold_action:
+          action: none
+        name: Auto
+        show_name: true
+        icon: mdi:autorenew
+        color_type: card
+        state:
+          - value: 'on'
+            color: CornflowerBlue
+          - value: 'off'
+            color: grey
+  - type: horizontal-stack
+    cards:
+      - type: sensor
+        entity: sensor.komfovent_supply_temperature_c
+        name: Supply
+        detail: 1
+      - type: sensor
+        entity: sensor.komfovent_heater_power_w
+        name: Heater
+        graph: line
+        icon: mdi:radiator
+      - type: sensor
+        entity: sensor.komfovent_supply_flow_volume
+        name: Supply
+        icon: mdi:fan
+  - type: horizontal-stack
+    cards:
+      - type: sensor
+        entity: sensor.komfovent_extract_temperature_c
+        name: Extract
+        icon: mdi:home-export-outline
+      - type: sensor
+        entity: sensor.komfovent_extract_humidity_sht
+        detail: 1
+        name: Humdity
+      - type: sensor
+        entity: sensor.co2_3
+        icon: mdi:molecule-co2
+        detail: 1
+        name: ' '
+  - type: horizontal-stack
+    cards:
+      - type: custom:numberbox-card
+        name: Eco Max
+        border: true
+        entity: input_number.komfovent_set_eco_max_temp
+        initial: '{{komfovent_eco_max_supply_temperature_c}}'
+      - type: custom:numberbox-card
+        name: Eco Min
+        border: true
+        entity: input_number.komfovent_set_eco_min_temp
+        initial: '{{komfovent_eco_min_supply_temperature_c}}'
+  - type: horizontal-stack
+    cards:
+      - type: custom:numberbox-card
+        name: Setpoint
+        border: true
+        entity: input_number.komfovent_set_temp
+        initial: '{{sensor.komfovent_status_normal_setpoint_c}}'
+      - type: custom:numberbox-card
+        name: Set Fan
+        border: true
+        entity: input_number.komfovent_set_fan
+        initial: '{{sensor.komfovent_fan_intensity}}'
+  - type: horizontal-stack
+    cards:
+      - type: sensor
+        entity: sensor.komfovent_status_normal_setpoint_c
+        icon: mdi:thermometer
+        name: Setpoint
+      - type: sensor
+        entity: sensor.komfovent_outdoor_temperature_c
+        name: Outside
+        icon: mdi:thermometer
