@@ -110,7 +110,14 @@ modbus:
       address: 5
       input_type: holding
       data_type: uint16
-      # unique_id: kom_s_sched
+    - name: "Komfovent Temp Control num"
+      address: 10
+      input_type: holding
+      data_type: uint16
+    - name: "Komfovent Flow Control num"
+      address: 11
+      input_type: holding
+      data_type: uint16
     - name: "Komfovent Control Indoor Humidity %"
       address: 40
       input_type: holding
@@ -223,7 +230,7 @@ modbus:
       data_type: uint32
       input_type: holding
       precision: 0
-      unit_of_measurement: '%'
+      unit_of_measurement: 'm³/h'
       scan_interval: 10
     - name: "Komfovent Extract Flow volume"
       address: 907
@@ -231,7 +238,7 @@ modbus:
       data_type: uint32
       input_type: holding
       precision: 0
-      unit_of_measurement: '%'
+      unit_of_measurement: 'm³/h'
       scan_interval: 10
     - name: "Komfovent Supply Fan Intensivity '%"
       address: 909
@@ -455,7 +462,7 @@ sensor:
           {% set mapper =  {
               '0' : 'Off',
               '1' : 'On'} %}
-          {% set state =  states.sensor.komfovent_on_off_num.state %}
+          {% set state =  states('sensor.komfovent_on_off_num') %}
           {{ mapper[state] if state in mapper else 'Unknown' }}
 
       komfovent_eco_mode:
@@ -465,7 +472,7 @@ sensor:
           {% set mapper =  {
               '0' : 'Off',
               '1' : 'On'} %}
-          {% set state =  states.sensor.komfovent_eco_num.state %}
+          {% set state =  states('sensor.komfovent_eco_num') %}
           {{ mapper[state] if state in mapper else 'Unknown' }}
 
       komfovent_auto_mode:
@@ -475,7 +482,7 @@ sensor:
           {% set mapper =  {
               '0' : 'Off',
               '1' : 'On'} %}
-          {% set state =  states.sensor.komfovent_auto_num.state %}
+          {% set state =  states('sensor.komfovent_auto_num') %}
           {{ mapper[state] if state in mapper else 'Unknown' }}
 
       komfovent_operation_mode:
@@ -494,7 +501,7 @@ sensor:
               '8' : 'Holiday',
               '9' : 'Air Quality',
               '10' : 'Off' } %}
-          {% set state =  states.sensor.komfovent_mode_num.state %}
+          {% set state =  states('sensor.komfovent_mode_num') %}
           {{ mapper[state] if state in mapper else 'Unknown' }}
 
       komfovent_scheduler_mode:
@@ -506,7 +513,31 @@ sensor:
               '1' : 'WorkingWeek',
               '2' : 'Office',
               '3' : 'Custom'} %}
-          {% set state =  states.sensor.komfovent_scheduler_num.state %}
+          {% set state =  states('sensor.komfovent_scheduler_num') %}
+          {{ mapper[state] if state in mapper else 'Unknown' }}
+
+      komfovent_temp_control_mode:
+        friendly_name: "Komfovent Temperature Control Mode"
+        unit_of_measurement: "State"
+        value_template: >-
+          {% set mapper =  {
+              '0' : 'Supply',
+              '1' : 'Extract',
+              '2' : 'Balance',
+              '3' : 'Room'} %}
+          {% set state =  states('sensor.komfovent_temp_control_num') %}
+          {{ mapper[state] if state in mapper else 'Unknown' }}
+
+      komfovent_flow_control_mode:
+        friendly_name: "Komfovent Flow Control Mode"
+        unit_of_measurement: "State"
+        value_template: >-
+          {% set mapper =  {
+              '0' : 'CAV',
+              '1' : 'VAV',
+              '2' : 'DCV',
+              '3' : 'OFF'} %}
+          {% set state =  states('sensor.komfovent_flow_control_num') %}
           {{ mapper[state] if state in mapper else 'Unknown' }}
 
       komfovent_eco_free_heat_cool_mode:
@@ -549,6 +580,14 @@ sensor:
           {% set state =  states('sensor.komfovent_eco_constant_hr_enabled_status_num') %}
           {{ mapper[state] if state in mapper else 'Unknown' }}
 
+
+
+
+  # - platform: number
+  #     komfovent_yesterday_heater_total_kwh:
+  #       name: "Komfovent Yesterday Heater Total"
+  #       unit_of_measurement: kWh
+
 input_number:
   komfovent_set_fan:
     name: "Komfovent Set Fan"
@@ -557,25 +596,32 @@ input_number:
     max: 70
     step: 5
 
+  komfovent_set_fan_vol:
+    name: "Komfovent Set Fan Vol"
+    unit_of_measurement: 'm³/h'
+    min: 136
+    max: 491
+    step: 25
+
   komfovent_set_temp:
     name: "Komfovent Set Temp"
     unit_of_measurement: °C
     min: 15.0
-    max: 24.0
+    max: 26.0
     step: 0.1
 
   komfovent_set_eco_max_temp:
     name: "Komfovent Set Eco Max Temp"
     unit_of_measurement: °C
     min: 15.0
-    max: 24.0
+    max: 26.0
     step: 0.1
 
   komfovent_set_eco_min_temp:
     name: "Komfovent Set Eco Min Temp"
     unit_of_measurement: °C
     min: 15.0
-    max: 24.0
+    max: 26.0
     step: 0.1
 
 shell_command:
@@ -705,6 +751,7 @@ script:
           unit: 2
           value: '{{ komfovent_fan_intensity }}'
     mode: single
+
   komfovent_dummy:
     alias: 'Komfovent Dummy script'
     sequence:
@@ -739,18 +786,26 @@ automation:
           komfovent_temp_setpoint: "{{(states('input_number.komfovent_set_temp') | float(2.0) * 10) | int(20)}}"
     mode: single
 
+              # {{(states('sensor.komfovent_extract_fan_intensivity') | round(0,"common",20))
+                # != (states('input_number.komfovent_set_fan') | round(0,"common",20))}}
   - alias: Komfovent Set Normal Fan Input Number
     description: 'Set the input number to the Extract Normal Fan Setpoint value on HA start and if changed elsewhere (app or web)'
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
-        entity_id: sensor.komfovent_status_normal_fan_extract_setpoint
+        entity_id: sensor.komfovent_extract_fan_intensivity
     condition:
-      - condition: template
-        value_template: >- 
-            {{(states('sensor.komfovent_status_normal_fan_extract_setpoint') | int(20))
-              != (states('input_number.komfovent_set_fan') | int(20))}}
+      - condition: and
+        conditions:
+        # Only set if using % i.e. under 90 (max %).
+        - condition: numeric_state
+          entity_id: sensor.komfovent_extract_fan_intensivity
+          below: '90'
+        - condition: template
+          value_template: >- 
+              {{(states('sensor.komfovent_status_normal_fan_extract_setpoint') | int(20))
+                != (states('input_number.komfovent_set_fan') | int(20)) }}
     action:
       - service: input_number.set_value
         data:
@@ -859,3 +914,15 @@ automation:
         target:
           entity_id: input_number.komfovent_set_eco_min_temp
     mode: single
+
+  # - alias: Komfovent Exercise Fans
+  #   description: 'Write Normal Fan Setpoint (Sup & Extract) when input_number changes'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: input_number.komfovent_set_fan
+  #   condition: []
+  #   action:
+  #     - service: script.komfovent_write_fan_intensity_normal
+  #       data:
+  #         komfovent_fan_intensity: ["0","{{states.input_number.komfovent_set_fan.state}}"]
+  #   mode: single
