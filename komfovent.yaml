@@ -830,15 +830,9 @@ automation:
     description: ''
     mode: single
     trigger:
-      - platform: state
-        entity_id: sensor.komfovent_heater_consumption_day_kwh
-        to: '0.0'
-      - platform: state
-        entity_id: sensor.komfovent_heater_consumption_day_kwh
-        to: '0.01'
-      - platform: state
-        entity_id: sensor.komfovent_heater_consumption_day_kwh
-        to: '0.02'
+      - platform: numeric_state
+        entity_id: sensor.komfovent_ahu_consumption_day_kwh
+        below: 0.01
     action:
       - service: notify.persistent_notification
         data:
