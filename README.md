@@ -45,3 +45,19 @@ These negate the need for physical relays
 ### Binary Sensor
 
 Decode register 900
+
+## Lovelace Cards
+
+### Main Panel
+
+Note: Humidity and CO<sup>2</sup> are from separate sensors.
+
+![Main Panel](main_panel.png)
+
+### Eco Mode
+
+![Eco Mode](eco_mode.png)
+
+### Recuperation (with power off)
+
+![Recuperation](recuperation.png)
