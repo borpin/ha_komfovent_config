@@ -48,9 +48,11 @@ Decode register 900
 
 ## Lovelace Cards
 
+For the sample cards to work, you need to install this button package https://github.com/custom-cards/button-card
+
 ### Main Panel
 
-Note: Humidity and CO<sup>2</sup> are from separate sensors.
+**Note**: Humidity and CO<sub>2</sub> are from separate sensors.
 
 ![Main Panel](main_panel.png)
 
