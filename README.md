@@ -48,7 +48,7 @@ Decode register 900
 
 ## Lovelace Cards
 
-For the sample cards to work, you need to install this button package https://github.com/custom-cards/button-card
+For the sample cards to work, you need to install this button package https://github.com/custom-cards/button-card and this Number card https://github.com/htmltiger/numberbox-card
 
 ### Main Panel
 
